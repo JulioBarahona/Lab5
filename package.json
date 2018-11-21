@@ -1,7 +1,7 @@
 {
-  "name": "Lab5",
+  "name": "lab5",
   "version": "1.0.0",
-  "description": "Lab5",
+  "description": "Laboratorio 5: Chat usando sockets.... Este chat tiene similaridad con el laboratorio 4, sin embargo, ahora se tiene que usar node , npm y similares. Usando sockets se tiene que lograr una applicacion similar al laboratorio 4.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,11 +10,21 @@
     "type": "git",
     "url": "git+https://github.com/JulioBarahona/Lab5.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "Node"
+  ],
+  "author": "Julio Barahona",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/JulioBarahona/Lab5/issues"
   },
-  "homepage": "https://github.com/JulioBarahona/Lab5#readme"
+  "homepage": "https://github.com/JulioBarahona/Lab5#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "babel": "^6.23.0",
+    "express": "^4.16.4",
+    "form-data": "^2.3.3",
+    "node-fetch": "^2.3.0",
+    "socket.io": "^2.1.1"
+  }
 }
