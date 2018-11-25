@@ -91,6 +91,11 @@
       </div>
       <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
       <script src="/socket.io/socket.io.js"></script>
+       <div id="message-box">
+          <form action="">
+             <input name="input" id="m" type="text" class="text-element">
+             <input class="button" type="submit" value="Send" />
+       </div>
       <script>
           var socket = io();
          $('form').submit(function(){
@@ -118,14 +123,5 @@
               })
          })
       </script>
-       <div id="message-box">
-          <form action="">
-             <input name="input" id="m" type="text" class="text-element">
-             <input class="button" type="submit" value="Send" />
-       </div>
-      <script>
-
-         </script>
-          </form>
    </body>
 </html>
