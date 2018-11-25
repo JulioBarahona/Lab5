@@ -22,35 +22,48 @@ const studentID = "141206"
 const studentUsename = "Julio Barahona M"
 
 //where all the mesages wil be stored at
-messages = []
+outgoingMessage = 0
+chatMessages = []
 connections = []
 fetchDATA()
 
+
+//offline testing 
+// var person = [{ "nick":"John", "student_id":"123", "text": "pee pee" },
+// { "nick":"Anna", "student_id":"456", "text": "poo poo" },
+// { "nick":"Peter", "student_id":"789", "text": "pee poo"}]
+// console.log(person
+
 //gets the data from url
-function fetchDATA() {
+async function fetchDATA() {
   console.log('fetching....')
-  request.get(urlDennis, function(error, response, body){
-    let ping = JSON.parse(body); 
-    if(messages.length != ping.length){
-      messages = ping;
-      io.sockets.emit('chat message', messages); 
-    }
-})
+  const jsonFile = await axios.get(urlDennis)
+  const chatMessages = jsonFile.data
+  const psedoJSON = chatMessages.slice(outgoingMessage, chatMessages.length)
+  //console.log(psedoJSON)
+  io.emit('chat message', psedoJSON)
+  outgoingMessage = chatMessages.length
+
   console.log('fetched')
 }
 
 //sends the data to url
 function postDATA(msg) {
-  console.log('sending message')
   const formData = new FormData()
+  console.log('assembling message')
+
   formData.append('nick', studentUsename)
   formData.append('student_id', studentID)
   formData.append('text', msg)
+  
+  console.log('sending message')
   fetch(urlDennis, { 
     method: 'post', 
     body: formData 
   })
+
   console.log('message text sent')
+  fetchDATA()
 }
 
 //default directory is set as index
@@ -58,11 +71,23 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
+//trying to senf with enter
+/*mensajes.addEventListener("keydown", function (e) {
+    if (e.keyCode === 13) {
+      postDATA(e)
+      fetchDATA()
+      }
+});
+didnt work :(
+*/
+
 //checks for connections of new users and displays both connections and disconnections
-io.sockets.on('connection', function(socket){
-  connections.push(socket)
+io.on('connection', function(socket){
   console.log('Yeiiii! New User connected ... :D')
   console.log('%s sockets connected', connections.length)
+  console.log("fetching data....")
+  fetchDATA()
+  console.log("data fetched....")
 
   //disconnected from server 
   socket.on('disconnect', function(){
@@ -77,9 +102,11 @@ io.sockets.on('connection', function(socket){
 
 //sets the port in which the app will be listenint
 http.listen(port, function(){
-  console.log('Server is now running :D')
-  console.log('listening on *:' + port);
+  console.log('Server is now running on port 3000 :D')
 });
 
 //calls the fucntion every 10 seconds
-setInterval(function(){fetchDATA()}, 10000); 
+setInterval(function(){fetchDATA()}, 5000); 
+
+
+

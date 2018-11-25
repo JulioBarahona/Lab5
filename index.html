@@ -1,95 +1,131 @@
 <!--
-  Julio Barahona M
-  141206
-  Sistemas y tecnologias web
-  Seccion 10
-  Lab 5: Node & Sockets
--->
-<!doctype html>
-<html>
-  <head>
-    <style>
-      * { 
-          margin: 0; 
-          padding: 0; 
-          box-sizing: 
-          border-box; 
-        }
-      body { 
-        margin-top: 10px;
-        font: 13px Helvetica, Arial; 
-        background: url("https://i.imgur.com/eS4IxK3.png");
-      }
-      form { 
-        padding: 3px; 
-        background: #000; 
-        position: fixed; 
-        bottom: 0; 
-        width: 100%; 
-      }
-      form input { 
-        margin-right: 1.5%;
-        padding: 10px; 
-        border: 1; 
-        background-color: #000000;
-        width: 89%; 
-        color: cyan; 
-      }
-      form button { 
-        padding: 10px 30px;
-        font-size: 16px; 
-        background-color: #4CAF50;
-        width: 8%; 
-        color: white;
-        text-align: center;
-      }
-      #messages { 
-        list-style-type:none; 
-        margin: 0; 
-        padding: 0; 
-      }
-      #messages li { 
-        padding: 5px 10px; 
-      }
-      #messages li:nth-child(odd) { 
-        background: #eee;  
-      }
-      #messages { 
-        margin-bottom: 40px 
-      }
+   Julio Barahona M
+   141206
+   Sistemas y tecnologias web
+   Seccion 10
+   Lab 5: Node & Sockets
+   -->
+<html lang="en">
+   <head>
+      <style>
+          body {
+           margin: 0;
+           background: url("https://i.imgur.com/eS4IxK3.png");
+           padding: 0;
+         }
 
-    </style>
-    <title>Lab 5: Node & Sockets</title>
-  </head>
-  <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      $(function () {
-        var socket = io.connect();
-        $('form').submit(function(){
-          socket.emit('chat message', $('#m').val());
+         /*where messages go*/
+         .messagePanel {
+           display: flex;
+           height: 90vh;
+           flex-direction: column;
+           width: 100vw;  
+         }
+
+      /*general propeorties of message*/
+         .message {
+           width: 10vh;
+           overflow: hidden;
+         }
+
+         .chat-messages {
+           overflow-y: scroll;
+           flex-grow: 1;
+           display: flex;
+           flex-direction: column;
+           width: 100vw;
+         }
+
+         /*text zone*/
+         .text-element{
+           margin-left: 10px;
+           border-radius: 15px;
+           bottom: 8px;
+           position: absolute;
+           width: 88vw;
+           padding: 10px;
+         }
+         
+
+         /*send button*/
+         .button {
+           position: absolute;
+           bottom: 8px;
+           right: 35px;
+           text-align: center;
+           text-decoration: none;
+           display: inline-block;
+           background-color: #4CAF50;
+           border: none;
+           color: white;
+           padding: 10px 25px;
+           font-size: 16px;
+         }
+
+         /*messages not sent by the user*/
+         .inMessage {
+           padding: 15px;
+           margin-right: 10px;
+           width: 40vw;
+           height: 25vh;
+           text-align: right;
+            border-radius: 5px;
+           background: #708090;
+           align-self: flex-end;
+         }
+
+         /*message sent by user */
+         .userMessage {
+           margin-left: 10px;
+           height: 25vh;
+           width: 40vw;
+           border-radius: 5px;
+           background-color: #696969;
+         }
+      </style>
+   </head>
+   <body>
+      <div id="chat-window" class="messagePanel">
+         <div id="chat-messages" class="chat-messages">
+         </div>
+      </div>
+      <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+          var socket = io();
+         $('form').submit(function(){
+          socket.emit('chat message', $('#m').val())
           $('#m').val('');
-          const scrollPosition = document.getElementById("chat-messages").scrollTop;
-          document.getElementById("chat-messages").scrollTop = scrollPosition;
+          const currentPosition = document.getElementById("chat-messages").scrollTop;
+          document.getElementById("chat-messages").scrollTop = currentPosition
           return false;
-        });
-        socket.on('chat message', function(msg){
-        msg.map(jsonData =>  {
-          const poopyMcpoopID = jsonData.poopyMcpoopID;
-          const poopyMcpoopName = jsonData.poopyMcpoopName;
-          const message = jsonData.text;
-          const p = document.createElement("p")
-          p.innerHTML = "Username: " + poopyMcpoopName + " ID: " + poopyMcpoopID + ":<br />"+"<div class='message'>" + message + "</div>"
-          document.getElementById("chat-messages").append(p)
-          document.getElementById("chat-messages").scrollTop = scrollPosition
-        })
-    })
-    </script>
-  </body>
+         })
+         var socket = io();
+         socket.on('chat message', function(newMessages) {
+            const currentPosition = document.getElementById("chat-messages").scrollTop;
+            newMessages.map(info =>  {
+                const student_id = info.student_id;
+                const nick = info.nick;
+                const message = info.text
+                const p = document.createElement("p")
+                p.className ="inMessage"
+                if (student_id == "141206"){
+                  p.className = "userMessage"
+                }
+                p.innerHTML = ""+nick+"#"+student_id+":<br />"+"<div class='message'>"+message+"</div>"
+                document.getElementById("chat-messages").append(p)
+                document.getElementById("chat-messages").scrollTop = currentPosition
+              })
+         })
+      </script>
+       <div id="message-box">
+          <form action="">
+             <input name="input" id="m" type="text" class="text-element">
+             <input class="button" type="submit" value="Send" />
+       </div>
+      <script>
+
+         </script>
+          </form>
+   </body>
 </html>

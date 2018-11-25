@@ -1,0 +1,5 @@
+{"messages":[
+    { "nick":"John", "student_id":"123", "text": "pee pee" },
+    { "nick":"Anna", "student_id":"456", "text": "poo poo" },
+    { "nick":"Peter", "student_id":"789", "text": "pee poo" }
+]}
