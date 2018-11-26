@@ -38,10 +38,10 @@ fetchDATA()
 async function fetchDATA() {
   console.log('fetching....')
   const jsonFile = await axios.get(urlDennis)
-  const chatMessages = jsonFile.data
-  const psedoJSON = chatMessages.slice(outgoingMessage, chatMessages.length)
+  let chatMessages = jsonFile.data
+  let psedoJSON = chatMessages.slice(outgoingMessage, chatMessages.length)
   //console.log(psedoJSON)
-  io.emit('chat message', psedoJSON)
+  io.emit('chat message', chatMessages)
   outgoingMessage = chatMessages.length
 
   console.log('fetched')
@@ -106,7 +106,7 @@ http.listen(port, function(){
 });
 
 //calls the fucntion every 10 seconds
-setInterval(function(){fetchDATA()}, 5000); 
+setInterval(function(){fetchDATA()}, 10000); 
 
 
 

@@ -98,6 +98,7 @@
        </div>
       <script>
           var socket = io();
+          var myMessages = [];
          $('form').submit(function(){
           socket.emit('chat message', $('#m').val())
           $('#m').val('');
@@ -107,8 +108,13 @@
          })
          var socket = io();
          socket.on('chat message', function(newMessages) {
+           let splicedMessages;
             const currentPosition = document.getElementById("chat-messages").scrollTop;
-            newMessages.map(info =>  {
+            if(myMessages.length < newMessages.length){
+              splicedMessages = newMessages.slice(myMessages.length, newMessages.length)
+              myMessages = myMessages.concat(splicedMessages)
+            }
+            splicedMessages.map(info =>  {
                 const student_id = info.student_id;
                 const nick = info.nick;
                 const message = info.text
